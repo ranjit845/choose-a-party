@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pop to Play</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #DC143C 0%, #002868 50%, #DC143C 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 5s ease infinite;
+            overflow: hidden;
+            font-family: sans-serif;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- The Emoji Styling --- */
+        .emoji-btn {
+            background: none;
+            border: none;
+            font-size: 80px;
+            cursor: pointer;
+            user-select: none;
+            z-index: 10;
+            transition: transform 0.2s;
+            outline: none;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+        }
+
+        .emoji-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* 1. Growing Animation (Triggered on click) */
+        .growing {
+            animation: inflate 0.5s ease-in forwards;
+            pointer-events: none;
+        }
+
+        @keyframes inflate {
+            0% { transform: scale(1.1); }
+            80% { transform: scale(4); }
+            100% { transform: scale(6); }
+        }
+
+        /* 2. Popping Animation (Quick burst) */
+        .popping {
+            animation: burst 0.1s ease-out forwards;
+        }
+
+        @keyframes burst {
+            0% { transform: scale(6); opacity: 1; }
+            100% { transform: scale(8); opacity: 0; display: none; }
+        }
+
+        /* --- Video Styling --- */
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            max-width: 1280px;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* --- The Cutout/Ghost Styling --- */
+        .cutout {
+            position: absolute;
+            font-size: 100px;
+            opacity: 0.8;
+            pointer-events: none;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* 3. Fade Out Animation */
+        .fading-out {
+            animation: fadeExit 2s ease-out forwards;
+        }
+
+        @keyframes fadeExit {
+            0% { opacity: 0.8; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.1); }
+        }
+
+        /* --- Go Back Button Styling --- */
+        .go-back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            text-decoration: none;
+            border: 2px solid #fff;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .go-back-btn:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
+        }
+
+        .go-back-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+     </div>
+
+        <a href="index.html" class="go-back-btn">← Go Back</a>
+    </div>
+
+    <div class="container">
+        <button id="emoji" class="emoji-btn">🖕</button>
+
+        <video id="video-player" class="hidden" playsinline loop>
+            <source src="dance.webm" type="video/webm">
+      
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const emoji = document.getElementById('emoji');
+            const video = document.getElementById('video-player');
+
+            // Auto-play animation on page load
+            startAnimationSequence();
+
+            function startAnimationSequence() {
+                emoji.classList.add('growing');
+
+                emoji.addEventListener('animationend', (event) => {
+                    if (event.animationName === 'inflate') {
+                        triggerPop();
+                    }
+                }, { once: true });
+            }
+
+            function triggerPop() {
+                emoji.classList.remove('growing');
+                emoji.classList.add('popping');
+
+                emoji.addEventListener('animationend', (event) => {
+                    if (event.animationName === 'burst') {
+                        emoji.classList.add('hidden');
+                        playVideo();
+                    }
+                }, { once: true });
+            }
+
+            function playVideo() {
+                video.classList.remove('hidden');
+
+                const playPromise = video.play();
+
+                if (playPromise !== undefined) {
+                    playPromise.then(_ => {
+                        console.log("Video playing on loop.");
+                    })
+                    .catch(error => {
+                        console.log("Playback prevented:", error);
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

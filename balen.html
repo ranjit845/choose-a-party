@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Party Time!</title>
+    <style>
+        /* --- CSS STYLES --- */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevents scrollbars during animation */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+     background: linear-gradient(135deg, #3bb5f7, #d65db1, #ff6f91, #ff9671, #ffc75f, #f9f871);
+
+            background-size: 300% 300%;
+            animation: gradientShift 15s ease infinite;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+        }
+
+        /* Animated Background Theme */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Container for content */
+        .container {
+            position: relative;
+            z-index: 10; /* Ensures content is above confetti */
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 90%;
+        }
+
+        /* Congratulatory Message */
+        .message {
+            font-size: 2.5rem;
+            color: #333;
+            opacity: 0; /* Hidden initially */
+            transform: translateY(20px);
+            transition: opacity 2s ease, transform 2s ease;
+        }
+
+        .message.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Bell Icon Styling */
+        .bell-container {
+            margin-top: 30px;
+            opacity: 0; /* Hidden initially */
+            transition: opacity 2s ease 1s; /* 1s delay after message */
+        }
+
+        .bell-container.visible {
+            opacity: 1;
+        }
+
+        .bell-btn {
+            background: none;
+            border: none;
+            font-size: 4rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+            outline: none;
+        }
+
+        .bell-btn:hover {
+            animation: ring 0.5s ease-in-out infinite;
+        }
+
+        .bell-btn:active {
+            transform: scale(0.9);
+        }
+
+        /* Bell Ring Animation */
+        @keyframes ring {
+            0% { transform: rotate(0); }
+            25% { transform: rotate(15deg); }
+            50% { transform: rotate(0); }
+            75% { transform: rotate(-15deg); }
+            100% { transform: rotate(0); }
+        }
+
+        /* Go Back Button Styling */
+        .go-back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .go-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .go-back-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Confetti Elements */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            top: -10px;
+            z-index: 1;
+        }
+
+        /* Confetti Falling Keyframes */
+        @keyframes fall {
+            0% { top: -10vh; transform: translateX(0) rotate(0); opacity: 1;}
+            100% { top: 110vh; transform: translateX(100px) rotate(720deg); opacity: 0;}
+        }
+    </style>
+</head>
+<body>
+
+    <div id="confetti-wrapper"></div>
+
+    <div class="container">
+        <h1 class="message" id="congrats-text">Congratulations on selecting the best party and contributing to devlopment of nepal!</h1>
+        
+        <div class="bell-container" id="bell-area">
+            <button class="bell-btn" id="bell-icon" title="Click for music!">🔔</button>
+            <p style="font-size: 0.9rem; color: #666;">Click the bell!</p>
+        </div>
+
+        <a href="index.html" class="go-back-btn">← Go Back</a>
+    </div>
+
+    <script>
+        /* --- JAVASCRIPT --- */
+
+        document.addEventListener("DOMContentLoaded", () => {
+            startParty();
+        });
+
+        function startParty() {
+            // 1. Trigger Confetti
+            createConfetti(150); // Create 150 pieces of confetti
+
+            // 2. Reveal Message after a delay (wait for confetti to fill screen)
+            setTimeout(() => {
+                document.getElementById('congrats-text').classList.add('visible');
+            }, 2000); // 2 seconds delay
+
+            // 3. Reveal Bell after the message
+            setTimeout(() => {
+                document.getElementById('bell-area').classList.add('visible');
+            }, 3000); // 3 seconds delay
+        }
+
+        // --- Confetti Logic ---
+        function createConfetti(amount) {
+            const colors = ['#ff6f91', '#ff9671', '#ffc75f', '#f9f871', '#00c9a7', '#845ec2'];
+            const wrapper = document.getElementById('confetti-wrapper');
+
+            for (let i = 0; i < amount; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                
+                // Randomize appearance and position
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                confetti.style.height = (Math.random() * 20 + 10) + 'px';
+                
+                // Randomize animation speed and delay
+                const duration = Math.random() * 3 + 2; // Between 2 and 5 seconds
+                const delay = Math.random() * 2; // Start at different times
+                
+                confetti.style.animation = `fall ${duration}s linear ${delay}s forwards`;
+                
+                wrapper.appendChild(confetti);
+            }
+        }
+
+        // --- Audio Logic ---
+        const bellBtn = document.getElementById('bell-icon');
+        
+        bellBtn.addEventListener('click', () => {
+            // Plays a copyright-free celebration sound
+            // NOTE: Replace 'party_sound.mp3' with your actual file path if local
+            const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3'); 
+            
+            audio.volume = 0.5;
+            audio.play().catch(error => {
+                console.log("Audio playback failed (browser might require interaction first):", error);
+                alert("Audio playing! (If you don't hear it, check your volume)");
+            });
+
+            // Add a temporary visual click effect
+            bellBtn.style.transform = "scale(1.2)";
+            setTimeout(() => bellBtn.style.transform = "scale(1)", 200);
+        });
+
+    </script>
+</body>
+</html>
+</body>
+</html>
